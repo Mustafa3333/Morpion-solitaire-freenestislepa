@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.netislepafree.morpion_solitaire.UserInterface">
+
+    <center>
+        <ScrollPane BorderPane.alignment="CENTER">
+            <content>
+                <Canvas fx:id="gameCanvas" height="321.0" onMousePressed="#mousePressed" width="1046.0" />
+            </content>
+        </ScrollPane>
+    </center>
+    <top>
+        <AnchorPane>
+            <children>
+                <Label fx:id="scoreLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Score : ">
+                    <font>
+                        <Font size="26.0" />
+                    </font>
+                </Label>
+                <Label fx:id="timeLabel" layoutX="261.0" prefHeight="38.0" prefWidth="324.0" text="Time Elapsed:">
+                    <font>
+                        <Font size="26.0" />
+                    </font>
+                </Label>
+                <ComboBox fx:id="themeOptions" layoutX="710.0" layoutY="6.0" prefWidth="150.0" />
+            </children>
+        </AnchorPane>
+    </top>
+</BorderPane>
