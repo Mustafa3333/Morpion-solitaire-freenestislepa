@@ -53,4 +53,12 @@ public class Line {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    public Point getNewPoint() {
+        return newPoint;
+    }
+
+    public int getNumber() {
+        return number;
+    }
 }

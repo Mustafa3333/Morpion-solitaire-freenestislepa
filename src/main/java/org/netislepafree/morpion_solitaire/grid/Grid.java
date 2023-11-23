@@ -1,18 +1,31 @@
 package org.netislepafree.morpion_solitaire.grid;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Grid implements Serializable {
     private final Point[][] grid;
+    private final Set<Point> points;
+    public Set<Point> getPoints() {
+        return Collections.unmodifiableSet(points);
+    }
     private final List<Line> lines;
     private Mode mode;
     private int width;
     private int height;
+
+    public int getWidth() {
+        return grid.length;
+    }
+
+    public int getHeight() {
+        return grid[0].length;
+    }
+
     public Grid(int width, int height, Mode mode) {
         this.width=width;
         this.height=height;
+        this.points= new HashSet<>();
         this.grid = new Point[width][height];
         this.lines = new ArrayList<>();
         this.mode = mode;
@@ -20,6 +33,7 @@ public class Grid implements Serializable {
     public void addPoint(int x, int y) {
         if (grid[x][y] == null) {
             grid[x][y] = new Point(x, y);
+            points.add(grid[x][y]);
         }
     }
     public void deletePoint(Point point) {
@@ -122,10 +136,10 @@ public class Grid implements Serializable {
                 line.setDirection(direction);
                 possibleLines.add(line);
             }
+//            System.out.println();
         }
         return possibleLines;
     }
-
     public boolean isValidX(int x) {
         return x >= 0 && x < width;
     }
@@ -133,22 +147,13 @@ public class Grid implements Serializable {
     public boolean isValidY(int y) {
         return y >= 0 && y < height;
     }
-// setter/getter
-
-
-    public void afficher(){
-        for (int i = 0; i < grid.length; i++) {
-            // Iterate through columns
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] != null){
-                    System.out.println(".");
-                } else {System.out.print(" ");}
-            }
-            System.out.println(); // Move to the next line after each row
-    }}
 
     public void setMode(Mode mode) {
         this.mode = mode;
+    }
+
+    public List<Line> getLines() {
+        return lines;
     }
 }
 

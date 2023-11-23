@@ -3,19 +3,19 @@ package org.netislepafree.morpion_solitaire;
 import org.netislepafree.morpion_solitaire.grid.Grid;
 import org.netislepafree.morpion_solitaire.grid.Line;
 import org.netislepafree.morpion_solitaire.grid.Mode;
+import org.netislepafree.morpion_solitaire.view.GridView;
 
 import java.util.List;
 
 public class Game {
     private String playerName;
-    private Grid grid;
-    private boolean gameOver;
-    private boolean computerMode;
+    public Grid grid;
+    private GridView gridView;
+    private boolean computerMode=false;
 
     public Game() {
         grid = new Grid(50, 50, Mode._5D);
         grid.init();
-        gameOver = false;
     }
 
     public void playerMove(int x, int y){

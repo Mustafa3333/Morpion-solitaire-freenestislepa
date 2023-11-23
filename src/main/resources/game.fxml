@@ -16,7 +16,7 @@
     <center>
         <ScrollPane BorderPane.alignment="CENTER">
             <content>
-                <Canvas fx:id="gameCanvas" height="321.0" onMousePressed="#mousePressed" width="1046.0" />
+                <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="1046.0" />
             </content>
         </ScrollPane>
     </center>
@@ -33,7 +33,7 @@
                         <Font size="26.0" />
                     </font>
                 </Label>
-                <ComboBox fx:id="themeOptions" layoutX="710.0" layoutY="6.0" prefWidth="150.0" />
+                <ComboBox fx:id="gameModeOptions" onAction="#gameModeChanged" prefHeight="26.0" prefWidth="61.0" />
             </children>
         </AnchorPane>
     </top>
