@@ -6,6 +6,16 @@ import java.util.*;
 public class Grid implements Serializable {
     private final Point[][] grid;
     private final Set<Point> points;
+    private List<Point> highlightedPoints=new ArrayList<>();
+
+    public List<Point> getHighlightedPoints() {
+        return highlightedPoints;
+    }
+
+    public void setHighlightedPoints(List<Point> highlightedPoints) {
+        this.highlightedPoints = highlightedPoints;
+    }
+
     public Set<Point> getPoints() {
         return Collections.unmodifiableSet(points);
     }

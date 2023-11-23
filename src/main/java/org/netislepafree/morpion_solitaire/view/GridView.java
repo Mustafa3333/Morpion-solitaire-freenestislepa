@@ -7,6 +7,8 @@ import org.netislepafree.morpion_solitaire.grid.Grid;
 import org.netislepafree.morpion_solitaire.grid.Line;
 import org.netislepafree.morpion_solitaire.grid.Point;
 
+import java.util.List;
+
 public class GridView {
     private Grid grid;
     private Canvas canvas;
@@ -75,7 +77,20 @@ public class GridView {
         grid.getLines().forEach(line ->{
             drawLine(line);
         });
+
+        // Draw higlithed Points
+        highlightPoints(grid.getHighlightedPoints());
     }
+
+    private void highlightPoints(List<Point> points){
+        if (points.size()>0) {
+            g.setFill(Color.valueOf("#FF5733"));
+            points.forEach(point -> {
+                drawPoint(point, 5);
+            });
+        }
+    }
+
 
     public void drawPoint(Point point, int radius){
         g.fillOval(offX + cellSize * point.x - radius, offY + cellSize * point.y - radius, 2 * radius, 2 * radius);

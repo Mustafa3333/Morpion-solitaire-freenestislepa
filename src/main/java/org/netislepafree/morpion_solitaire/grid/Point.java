@@ -24,4 +24,11 @@ public class Point implements Serializable {
         lockedDirections.remove(direction);
     }
 
+    public boolean equals(Object other) {
+        if (other.getClass() != getClass())
+            return false;
+        Point p = (Point) other;
+        return x == p.x && y == p.y;
+    }
+
 }

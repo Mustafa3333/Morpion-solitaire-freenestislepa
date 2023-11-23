@@ -28,11 +28,6 @@
                         <Font size="26.0" />
                     </font>
                 </Label>
-                <Label fx:id="timeLabel" layoutX="261.0" prefHeight="38.0" prefWidth="324.0" text="Time Elapsed:">
-                    <font>
-                        <Font size="26.0" />
-                    </font>
-                </Label>
                 <ComboBox fx:id="gameModeOptions" onAction="#gameModeChanged" prefHeight="26.0" prefWidth="61.0" />
             </children>
         </AnchorPane>
