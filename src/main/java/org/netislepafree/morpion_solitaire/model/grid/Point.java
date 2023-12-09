@@ -1,4 +1,4 @@
-package org.netislepafree.morpion_solitaire.grid;
+package org.netislepafree.morpion_solitaire.model.grid;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -22,6 +22,12 @@ public class Point implements Serializable {
 
     public void unlock(Direction direction) {
         lockedDirections.remove(direction);
+    }
+
+    public Point copy() {
+        Point copy = new Point(x, y);
+        copy.lockedDirections.addAll(lockedDirections);
+        return copy;
     }
 
     public boolean equals(Object other) {

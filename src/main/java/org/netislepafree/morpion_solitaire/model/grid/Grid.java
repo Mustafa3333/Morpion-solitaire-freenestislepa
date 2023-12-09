@@ -1,7 +1,10 @@
-package org.netislepafree.morpion_solitaire.grid;
+package org.netislepafree.morpion_solitaire.model.grid;
+
+import org.netislepafree.morpion_solitaire.model.algorithms.RandomSearchAlgorithm;
 
 import java.io.Serializable;
 import java.util.*;
+
 
 public class Grid implements Serializable {
     private final Point[][] grid;
@@ -46,10 +49,6 @@ public class Grid implements Serializable {
             points.add(grid[x][y]);
         }
     }
-    public void deletePoint(Point point) {
-        grid[point.x][point.y] = null;
-    }
-
     public void addLine(Line line) {
         line.setNumber(lines.size() + 1);
         line.getPoints().forEach(point -> {
@@ -146,10 +145,24 @@ public class Grid implements Serializable {
                 line.setDirection(direction);
                 possibleLines.add(line);
             }
-//            System.out.println();
         }
         return possibleLines;
     }
+
+    public void resetLine() {
+        Line line = lines.get(lines.size() - 1);
+        for (Point point : line.getPoints()) {
+            if (grid[point.x][point.y] != null) {
+                grid[point.x][point.y].unlock(line.getDirection());
+            }
+        }
+        lines.remove(line);
+
+        Point newPoint=line.getNewPoint();
+        grid[newPoint.x][newPoint.y] = null;
+        points.remove(line.getNewPoint());
+    }
+
     public boolean isValidX(int x) {
         return x >= 0 && x < width;
     }
@@ -164,6 +177,67 @@ public class Grid implements Serializable {
 
     public List<Line> getLines() {
         return lines;
+    }
+
+    public List<Line> possibleLines(){
+        HashSet<Point> pointsSoFar = new HashSet<>();
+        List<Line> possibleLines = new ArrayList<>();
+        points.forEach(gridPoint -> getNeighbors(gridPoint).stream()
+                .filter(point -> !pointsSoFar.contains(gridPoint))
+                .forEach(point -> {
+                    pointsSoFar.add(point);
+                    possibleLines.addAll(findLines(point.x, point.y));
+                }));
+        return possibleLines;
+    }
+
+    public Collection<Point> getNeighbors(Point point) {
+        List<Point> neighbors = new ArrayList<>();
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue;
+                int x = point.x + i;
+                int y = point.y + j;
+                if (isValidX(x) && isValidY(y)) {
+                    neighbors.add(new Point(x, y));
+                }
+            }
+        }
+        return neighbors;
+    }
+
+    public Grid copy() {
+        Grid copy = new Grid(getWidth(), getHeight(), mode);
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (grid[i][j] == null) continue;
+                copy.grid[i][j] = grid[i][j].copy();
+            }
+        }
+        copy.lines.addAll(lines.stream().map(Line::copy).toList());
+        copy.points.addAll(points);
+        return copy;
+    }
+    public Grid child(Line line) {
+        Grid newGrid = copy();
+        newGrid.addLine(line);
+        return newGrid;
+    }
+
+    public List<Line>  rollout() {
+        Grid copy = copy();
+        List<Line> list = new LinkedList<>();
+        RandomSearchAlgorithm r = new RandomSearchAlgorithm();
+        while (true) {
+
+            Line compLine = r.chooseMove(copy);
+            if (compLine == null) {
+                break;
+            }
+            list.add(compLine);
+            copy.addLine(compLine);
+        }
+        return list;
     }
 }
 

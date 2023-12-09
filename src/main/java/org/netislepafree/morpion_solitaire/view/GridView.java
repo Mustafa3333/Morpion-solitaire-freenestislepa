@@ -3,9 +3,10 @@ package org.netislepafree.morpion_solitaire.view;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.netislepafree.morpion_solitaire.grid.Grid;
-import org.netislepafree.morpion_solitaire.grid.Line;
-import org.netislepafree.morpion_solitaire.grid.Point;
+import javafx.scene.text.Font;
+import org.netislepafree.morpion_solitaire.model.grid.Grid;
+import org.netislepafree.morpion_solitaire.model.grid.Line;
+import org.netislepafree.morpion_solitaire.model.grid.Point;
 
 import java.util.List;
 
@@ -32,15 +33,14 @@ public class GridView {
 
     public void init(){
         g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         // Rectangle of grid
         g.setLineWidth(2.0);
-        g.setStroke(Color.valueOf("#34495E"));
+        g.setStroke(Color.valueOf("#CCCCCC"));
         g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         // Grid
         g.setLineWidth(1);
-        g.setStroke(Color.valueOf("#404258"));
+        g.setStroke(Color.valueOf("#CCCCCC"));
         for (double gridX = 0; gridX < grid.getWidth(); gridX++) {
             double x1 = (offX + gridX * cellSize)+0.5;
             double y1 = (offY)+0.5;
@@ -63,17 +63,17 @@ public class GridView {
 
     public void updateView(){
         // Draw points
-        g.setFill(Color.valueOf("#C0A080"));
+        g.setFill(Color.valueOf("#000000"));
         grid.getPoints().forEach(point -> {
             drawPoint(point, 5);
         });
 
         // Draw numbered points
-        g.setStroke(Color.valueOf("#D5BFBF"));
+        g.setStroke(Color.valueOf("#8B0000"));
         grid.getLines().forEach(line -> drawNumberedPoint(line.getNewPoint(), line.getNumber()));
 
         // Draw lines
-        g.setStroke(Color.valueOf("#D5BFBF"));
+        g.setStroke(Color.valueOf("#8B0000"));
         grid.getLines().forEach(line ->{
             drawLine(line);
         });
@@ -110,7 +110,7 @@ public class GridView {
         double centerY = offY + cellSize * p.y - radius;
         double numX = centerX + radius * .65 * 1.0 / (num + "").length();
         double numY = centerY + radius * 1.3;
-        g.setFill(Color.valueOf("#C0A080"));
+        g.setFill(Color.valueOf("#8BE92F"));
         g.fillOval(centerX, centerY, radius * 2, radius * 2);
         g.setLineWidth(1);
         g.setStroke(Color.valueOf("#0C3547"));

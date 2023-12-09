@@ -1,10 +1,11 @@
-package org.netislepafree.morpion_solitaire.grid;
+package org.netislepafree.morpion_solitaire.model.grid;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Line {
+public class Line implements Serializable {
     private final List<Point> points;
 
     /**
@@ -34,6 +35,9 @@ public class Line {
 
     public void addPoint(Point point) {
         points.add(point);
+    }
+    public Line copy() {
+        return new Line(points, newPoint, direction, number);
     }
     public void setNewPoint(Point newPoint) {
         this.newPoint = newPoint;

@@ -11,8 +11,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.netislepafree.morpion_solitaire.UserInterface">
-
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.netislepafree.morpion_solitaire.controller.UserInterface">
     <center>
         <ScrollPane BorderPane.alignment="CENTER">
             <content>
@@ -20,16 +21,26 @@
             </content>
         </ScrollPane>
     </center>
-    <top>
-        <AnchorPane>
-            <children>
+    <right>
+        <VBox alignment="CENTER" spacing="50" prefWidth="130">
+            <VBox alignment="CENTER" spacing="10">
                 <Label fx:id="scoreLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Score : ">
                     <font>
                         <Font size="26.0" />
                     </font>
                 </Label>
                 <ComboBox fx:id="gameModeOptions" onAction="#gameModeChanged" prefHeight="26.0" prefWidth="61.0" />
-            </children>
-        </AnchorPane>
-    </top>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="graphButton" mnemonicParsing="false" onAction="#reset" text="Reset" />
+                <Button fx:id="undoButton" mnemonicParsing="false" onAction="#undo" text="Undo" />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="algorithmOptions" prefHeight="26.0" prefWidth="99.0" />
+                <Button fx:id="simulateButton" mnemonicParsing="false" onAction="#simulate" prefHeight="26.0" prefWidth="64.0" text="Simulate" />
+            </VBox>
+        </VBox>
+    </right>
 </BorderPane>
