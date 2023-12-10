@@ -85,7 +85,11 @@ public class Grid implements Serializable {
         }
         return possibleLines;
     }
-    // Check que quand on add un point ca forme une ligne ou pas
+    public Mode getMode() {
+		return this.mode;
+	}
+
+	// Check que quand on add un point ca forme une ligne ou pas
     public List<Line> findLines(int x, int y, Direction direction) {
         if (grid[x][y] != null) {
             return new ArrayList<>();

@@ -6,7 +6,6 @@ import org.netislepafree.morpion_solitaire.model.grid.Line;
 import org.netislepafree.morpion_solitaire.model.grid.Mode;
 import org.netislepafree.morpion_solitaire.model.grid.Point;
 import org.netislepafree.morpion_solitaire.model.util.Score;
-import org.netislepafree.morpion_solitaire.view.GridView;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -88,12 +87,12 @@ public class Game {
     public void setGameMode(Mode mode) {
         this.grid.setMode(mode);
     }
-
+    
     public int getScore() {
         return grid.getLines().size();
     }
+    
     private static Grid loadBestGrid(){
-        Grid best = null;
         try {
             FileInputStream file = new FileInputStream("best.grid");
             ObjectInputStream in = new ObjectInputStream(file);
@@ -136,4 +135,5 @@ public class Game {
         saveScore();
         saveGrid(this.grid);
     }
+
 }

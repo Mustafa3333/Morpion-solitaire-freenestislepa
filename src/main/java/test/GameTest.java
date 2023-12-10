@@ -1,18 +1,14 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.Before;
 import org.netislepafree.morpion_solitaire.model.Game;
-import org.netislepafree.morpion_solitaire.model.grid.Grid;
 import org.netislepafree.morpion_solitaire.model.grid.Line;
-import org.netislepafree.morpion_solitaire.model.grid.Point;
-
+import org.netislepafree.morpion_solitaire.model.grid.Mode;
 import java.util.List;
-
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
 
@@ -21,8 +17,7 @@ public class GameTest {
     @BeforeEach
     public void setUp() {
         game = new Game();
-        // Initialisation du jeu avec un état qui permet un mouvement valide
-        game.grid.init(); // Initialise le plateau avec la configuration de départ
+        game.grid.init();
     }
     
     @Test
@@ -39,7 +34,21 @@ public class GameTest {
         int y = 1;
         List<Line> possibleLines = game.grid.findLines(x, y);
         assertTrue("Le mouvement invalide ne devrait produire aucune ligne possible", possibleLines.isEmpty());
+    }  
+    
+    @Test
+    public void testResetMove() {
+        game.playerMove(19, 23);
+        game.resetMove();
+        List<Line> possibleLines = game.grid.findLines(19, 23);
+        assertTrue("Le mouvement valide devrait produire au moins une ligne possible", !possibleLines.isEmpty());  
     }
-	
+    
+    @Test
+    public void testSetMode() {
+        game.setGameMode(Mode._5T);
+        assertEquals(Mode._5T, game.grid.getMode(), "Le mode de jeu devrait être Mode._5T après l'avoir défini.");
+    }
+ 
 }
 
