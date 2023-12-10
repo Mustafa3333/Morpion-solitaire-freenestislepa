@@ -1,6 +1,9 @@
 package org.netislepafree.morpion_solitaire;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -42,7 +46,6 @@ public class App extends Application {
         // Bouton de connexion
         Button loginButton = new Button("Connexion");
         loginButton.getStyleClass().add("button");
-        
         loginButton.setOnAction(e -> {
             if (checkCredentials(usernameField.getText(), passwordField.getText())) {
                 startGame();
@@ -51,15 +54,29 @@ public class App extends Application {
             }
         });
 
-
-
         // Bouton d'inscription
         Button signupButton = new Button("Inscription");
         signupButton.getStyleClass().addAll("button", "red");
         signupButton.setOnAction(e -> showSignupWindow());
+        
+     // HBox pour les boutons de connexion et d'inscription
+        HBox buttonBox = new HBox(10); // 10 est l'espacement entre les boutons
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(loginButton, signupButton);
+
+        // Bouton "Règles du jeu"
+        Button rulesButton = new Button("Règles du jeu");
+        rulesButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+        rulesButton.setOnAction(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI("http://www.morpionsolitaire.com/Francais/Rules.htm"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         // Ajouter les éléments à la VBox
-        root.getChildren().addAll(usernameField, passwordField, loginButton, signupButton);
+        root.getChildren().addAll(usernameField, passwordField, buttonBox, rulesButton);
 
         // Créer la scène avec le thème sombre
         Scene scene = new Scene(root, 300, 250);
