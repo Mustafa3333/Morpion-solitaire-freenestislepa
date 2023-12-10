@@ -78,7 +78,7 @@ public class GridView {
             drawLine(line);
         });
 
-        // Draw higlithed Points
+        // Draw highlihgted Points
         highlightPoints(grid.getHighlightedPoints());
     }
 
