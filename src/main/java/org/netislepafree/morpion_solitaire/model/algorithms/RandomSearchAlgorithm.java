@@ -10,7 +10,15 @@ public class RandomSearchAlgorithm implements Algorithm {
     @Override
     public Line chooseMove(Grid grid) {
         List<Line> possibleLines = grid.possibleLines();
-        if (possibleLines.isEmpty()) return null;
-        else return possibleLines.get((int) (Math.random() * possibleLines.size()));
+        return selectRandomLine(possibleLines);
     }
+
+    private Line selectRandomLine(List<Line> lines) {
+        if (lines.isEmpty()) {
+            return null;
+        }
+        int randomIndex = (int) (Math.random() * lines.size());
+        return lines.get(randomIndex);
+    }
+
 }

@@ -3,7 +3,6 @@ package org.netislepafree.morpion_solitaire.view;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.netislepafree.morpion_solitaire.model.grid.Grid;
 import org.netislepafree.morpion_solitaire.model.grid.Line;
 import org.netislepafree.morpion_solitaire.model.grid.Point;
@@ -31,91 +30,129 @@ public class GridView {
         canvas.setFocusTraversable(true);
     }
 
-    public void init(){
-        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        // Rectangle of grid
-        g.setLineWidth(2.0);
-        g.setStroke(Color.valueOf("#CCCCCC"));
-        g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        // Grid
-        g.setLineWidth(1);
-        g.setStroke(Color.valueOf("#CCCCCC"));
-        for (double gridX = 0; gridX < grid.getWidth(); gridX++) {
-            double x1 = (offX + gridX * cellSize)+0.5;
-            double y1 = (offY)+0.5;
-            double x2 = (offX + gridX * cellSize)+0.5;
-            double y2 = (offY + (grid.getHeight() - 1) * cellSize)+0.5;
-
-            g.strokeLine(x1, y1, x2, y2);
-        }
-        for (double gridY = 0; gridY < grid.getHeight(); gridY++) {
-            double x1 = (offX)+0.5;
-            double y1 = (offY + gridY * cellSize)+0.5;
-            double x2 = (offX + (grid.getWidth() - 1) * cellSize)+0.5;
-            double y2 = (offY + gridY * cellSize)+0.5;
-            g.strokeLine(x1, y1, x2, y2);
-        }
-
+    public void init() {
+        clearCanvas();
+        drawGridRectangle();
+        drawGridLines();
         // draw init points
         updateView();
     }
 
-    public void updateView(){
-        // Draw points
+    private void clearCanvas() {
+        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    private void drawGridRectangle() {
+        g.setLineWidth(2.0);
+        g.setStroke(Color.valueOf("#CCCCCC"));
+        g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    private void drawGridLines() {
+        g.setLineWidth(1);
+        g.setStroke(Color.valueOf("#CCCCCC"));
+        drawVerticalGridLines();
+        drawHorizontalGridLines();
+    }
+
+    private void drawVerticalGridLines() {
+        for (double gridX = 0; gridX < grid.getWidth(); gridX++) {
+            double x = (offX + gridX * cellSize) + 0.5;
+            g.strokeLine(x, offY + 0.5, x, (offY + (grid.getHeight() - 1) * cellSize) + 0.5);
+        }
+    }
+
+    private void drawHorizontalGridLines() {
+        for (double gridY = 0; gridY < grid.getHeight(); gridY++) {
+            double y = (offY + gridY * cellSize) + 0.5;
+            g.strokeLine(offX + 0.5, y, (offX + (grid.getWidth() - 1) * cellSize) + 0.5, y);
+        }
+    }
+
+    public void updateView() {
+        drawPoints();
+        drawNumberedPoints();
+        drawLines();
+        highlightPoints();
+    }
+
+    private void drawPoints() {
         g.setFill(Color.valueOf("#000000"));
-        grid.getPoints().forEach(point -> {
-            drawPoint(point, 5);
-        });
+        grid.getPoints().forEach(point -> drawPoint(point, 5));
+    }
 
-        // Draw numbered points
-        g.setStroke(Color.valueOf("#8B0000"));
+    private void drawNumberedPoints() {
+        g.setStroke(Color.valueOf("#0F7129"));
         grid.getLines().forEach(line -> drawNumberedPoint(line.getNewPoint(), line.getNumber()));
+    }
 
-        // Draw lines
-        g.setStroke(Color.valueOf("#8B0000"));
-        grid.getLines().forEach(line ->{
-            drawLine(line);
-        });
+    private void drawLines() {
+        g.setStroke(Color.valueOf("#B91010"));
+        grid.getLines().forEach(this::drawLine);
+    }
 
-        // Draw highlihgted Points
+    private void highlightPoints() {
         highlightPoints(grid.getHighlightedPoints());
     }
 
     private void highlightPoints(List<Point> points){
         if (points.size()>0) {
-            g.setFill(Color.valueOf("#FF5733"));
+            g.setFill(Color.valueOf("#0F7129"));
             points.forEach(point -> {
                 drawPoint(point, 5);
             });
         }
     }
 
+    public void drawPoint(Point point, int radius) {
+        double centerX = calculateCoordinate(point.x, offX, cellSize);
+        double centerY = calculateCoordinate(point.y, offY, cellSize);
+        g.fillOval(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+    }
 
-    public void drawPoint(Point point, int radius){
-        g.fillOval(offX + cellSize * point.x - radius, offY + cellSize * point.y - radius, 2 * radius, 2 * radius);
+    private double calculateCoordinate(double pointCoord, double offset, double cellDimension) {
+        return offset + cellDimension * pointCoord;
     }
 
     private void drawLine(Line line) {
-        g.setLineWidth(2);
+        g.setLineWidth(3);
         Point p1 = line.getPoints().get(0);
         Point p2 = line.getPoints().get(line.getPoints().size() - 1);
 
-        g.strokeLine(offX + cellSize * p1.x, offY + cellSize * p1.y, offX + cellSize * p2.x, offY + cellSize * p2.y);
+        double x1 = calculatePosition(p1.x, offX, cellSize);
+        double y1 = calculatePosition(p1.y, offY, cellSize);
+        double x2 = calculatePosition(p2.x, offX, cellSize);
+        double y2 = calculatePosition(p2.y, offY, cellSize);
+
+        g.strokeLine(x1, y1, x2, y2);
+    }
+
+    private double calculatePosition(double pointCoordinate, double offset, double cellSize) {
+        return offset + cellSize * pointCoordinate;
     }
 
     private void drawNumberedPoint(Point p, int num) {
         double radius = 10;
-        double centerX = offX + cellSize * p.x - radius;
-        double centerY = offY + cellSize * p.y - radius;
-        double numX = centerX + radius * .65 * 1.0 / (num + "").length();
-        double numY = centerY + radius * 1.3;
-        g.setFill(Color.valueOf("#8BE92F"));
-        g.fillOval(centerX, centerY, radius * 2, radius * 2);
-        g.setLineWidth(1);
-        g.setStroke(Color.valueOf("#0C3547"));
-        g.strokeText(num + "", numX, numY);
+        double centerX = calculatePosition(p.x, offX, cellSize) - radius;
+        double centerY = calculatePosition(p.y, offY, cellSize) - radius;
+        drawCircle(centerX, centerY, radius);
+        drawNumberAtCenter(centerX, centerY, radius, num);
     }
+
+    private void drawCircle(double centerX, double centerY, double radius) {
+        g.setFill(Color.valueOf("#0F7129"));
+        g.fillOval(centerX, centerY, radius * 2, radius * 2);
+    }
+
+    private void drawNumberAtCenter(double centerX, double centerY, double radius, int num) {
+        g.setLineWidth(1);
+        g.setStroke(Color.valueOf("#FFFFFF"));
+        String numberStr = Integer.toString(num);
+        double numX = centerX + radius * 0.65 / numberStr.length();
+        double numY = centerY + radius * 1.3;
+        g.strokeText(numberStr, numX, numY);
+    }
+    
     public int getCellSize() {
         return cellSize;
     }

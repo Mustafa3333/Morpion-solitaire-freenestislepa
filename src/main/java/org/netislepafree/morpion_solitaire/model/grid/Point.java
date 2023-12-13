@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Point implements Serializable {
+    private static final long serialVersionUID = 1L;
     public final int x, y;
     private final Set<Direction> lockedDirections;
     public Point(int x, int y) {

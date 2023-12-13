@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import org.netislepafree.morpion_solitaire.model.Game;
 import org.netislepafree.morpion_solitaire.view.GridView;
 
+import java.awt.Point;
 import java.util.List;
 
 public class UserInterface {
@@ -22,6 +23,7 @@ public class UserInterface {
     private ComboBox<String> algorithmOptions;
     private Game game;
     private GridView gridView;
+    
     public void start(){
         gameModeOptions.getItems().removeAll(gameModeOptions.getItems());
         gameModeOptions.getItems().addAll("5T", "5D");
@@ -33,34 +35,74 @@ public class UserInterface {
         this.gridView= new GridView(game.grid, canvas,25);
         gridView.init();
     }
+    
     public void mousePressed(MouseEvent me) {
-        System.out.printf("(%f,%f)", me.getX(), me.getY());
-        double tolerance = 0.2;
-        double tempX = (me.getX() - gridView.getOffX()) / gridView.getCellSize();
-        double tempY = (me.getY() - gridView.getOffY()) / gridView.getCellSize();
-        double frX = tempX - (int) tempX;
-        double frY = tempY - (int) tempY;
-        if ((frX > tolerance && frX < 1 - tolerance) || (frY > tolerance && frY < 1 - tolerance)) {
+        logMousePosition(me);
+        if (isInvalidClick(me)) {
             System.out.println("INVALID");
             return;
         }
-        int gridX = (int) Math.round(tempX);
-        int gridY = (int) Math.round(tempY);
-        game.playerMove(gridX, gridY);
+
+        Point gridPoint = convertToGridCoordinates(me);
+        game.playerMove(gridPoint.x, gridPoint.y);
         gridView.updateView();
     }
-    public void gameModeChanged(){
+
+    private void logMousePosition(MouseEvent me) {
+        System.out.printf("(%f,%f)\n", me.getX(), me.getY());
+    }
+
+    private boolean isInvalidClick(MouseEvent me) {
+        double tolerance = 0.2;
+        double frX = calculateFractionalPart((me.getX() - gridView.getOffX()) / gridView.getCellSize());
+        double frY = calculateFractionalPart((me.getY() - gridView.getOffY()) / gridView.getCellSize());
+        return (frX > tolerance && frX < 1 - tolerance) || (frY > tolerance && frY < 1 - tolerance);
+    }
+
+    private double calculateFractionalPart(double value) {
+        return value - (int) value;
+    }
+
+    private Point convertToGridCoordinates(MouseEvent me) {
+        int gridX = (int) Math.round((me.getX() - gridView.getOffX()) / gridView.getCellSize());
+        int gridY = (int) Math.round((me.getY() - gridView.getOffY()) / gridView.getCellSize());
+        return new Point(gridX, gridY);
+    }
+
+    
+    public void gameModeChanged() {
+        Mode mode = determineSelectedGameMode();
+        resetGameWithNewMode(mode);
+    }
+
+    private Mode determineSelectedGameMode() {
+        String selectedMode = gameModeOptions.getSelectionModel().getSelectedItem();
+        return "5T".equalsIgnoreCase(selectedMode) ? Mode._5T : Mode._5D;
+    }
+
+    private void resetGameWithNewMode(Mode mode) {
         reset();
-        Mode mode = gameModeOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("5T") ? Mode._5T : Mode._5D;
         game.setGameMode(mode);
     }
-    public void reset(){
-        this.game=new Game();
-        this.gridView= new GridView(game.grid, canvas,25);
+    
+    public void reset() {
+        recreateGame();
+        updateGameMode();
         gridView.init();
-        Mode mode = gameModeOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("5T") ? Mode._5T : Mode._5D;
+    }
+
+    private void recreateGame() {
+        game = new Game();
+        gridView = new GridView(game.grid, canvas, 25);
+    }
+
+    private void updateGameMode() {
+        String selectedMode = gameModeOptions.getSelectionModel().getSelectedItem();
+        Mode mode = "5T".equalsIgnoreCase(selectedMode) ? Mode._5T : Mode._5D;
         game.setGameMode(mode);
     }
+
+    
     public void simulate() throws Exception {
         this.game.computerMode=true;
         String algorithmName = algorithmOptions.getSelectionModel().getSelectedItem().trim();
@@ -89,6 +131,7 @@ public class UserInterface {
         simulationThread.interrupt();
 
     }
+    
     public void undo(){
         this.game.resetMove();
         gridView.init();

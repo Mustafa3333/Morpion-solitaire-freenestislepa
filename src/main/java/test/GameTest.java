@@ -22,8 +22,8 @@ public class GameTest {
     
     @Test
     public void testValidLine() {
-        int x =  19;
-        int y =  23;
+        int x =  9;
+        int y =  13;
     	List<Line> possibleLines = game.grid.findLines(x, y);
         assertTrue("Le mouvement valide devrait produire au moins une ligne possible", !possibleLines.isEmpty());
     }
@@ -38,9 +38,9 @@ public class GameTest {
     
     @Test
     public void testResetMove() {
-        game.playerMove(19, 23);
+        game.playerMove(9, 13);
         game.resetMove();
-        List<Line> possibleLines = game.grid.findLines(19, 23);
+        List<Line> possibleLines = game.grid.findLines(9, 13);
         assertTrue("Le mouvement valide devrait produire au moins une ligne possible", !possibleLines.isEmpty());  
     }
     

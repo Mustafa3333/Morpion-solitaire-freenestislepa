@@ -8,51 +8,66 @@ import java.util.function.Supplier;
 
 public class NMCS implements Algorithm {
     @Override
-    public Line chooseMove(Grid grid) throws NullPointerException {
-        int level = 2;
-        List<Line> lines;
-        final long maxRunningTimeMs = 1000; // Temps maximal d'exécution en millisecondes
-        final long endTimeMs = System.currentTimeMillis() + maxRunningTimeMs;
-        lines = search(grid, level, () -> System.currentTimeMillis() > endTimeMs);
+    public Line chooseMove(Grid grid) {
+        int searchLevel = 2;
+        final long maxRunningTimeMs = 1000; 
 
-        return lines.size() > 0 ? lines.get(0) : null;
+        List<Line> lines = findLinesWithinTimeLimit(grid, searchLevel, maxRunningTimeMs);
+        return !lines.isEmpty() ? lines.get(0) : null;
+    }
+
+    private List<Line> findLinesWithinTimeLimit(Grid grid, int level, long maxRunningTimeMs) {
+        long endTimeMs = System.currentTimeMillis() + maxRunningTimeMs;
+        return search(grid, level, () -> System.currentTimeMillis() > endTimeMs);
     }
 
     private List<Line> search(Grid grid, int depth, final Supplier<Boolean> isCanceled) {
-        if (depth < 1)
+        if (depth < 1) {
             return grid.rollout();
+        }
 
         List<Line> globalBestLines = new LinkedList<>();
-
         List<Line> visited = new LinkedList<>();
 
         while (!grid.possibleLines().isEmpty() && !isCanceled.get()) {
-
-            List<Line> curBestLines = new LinkedList<>();
-            Line curBestLine = null;
-
-            List<Line> possibleLines = grid.possibleLines();
-            for (Line line : possibleLines) {
-                List<Line> rolloutLines = search(grid.child(line), depth - 1, isCanceled);
-                if (curBestLines.size() < rolloutLines.size()) {
-                    curBestLine = line;
-                    curBestLines = rolloutLines;
-                }
+            Line curBestLine = findBestLineForCurrentGrid(grid, depth, isCanceled, globalBestLines, visited);
+            if (curBestLine != null) {
+                updateVisitedAndGlobalBestLines(visited, globalBestLines, curBestLine);
+                grid = grid.child(curBestLine);
             }
-
-            if (curBestLines.size() < globalBestLines.size()) {
-                curBestLine = globalBestLines.get(visited.size());
-                visited.add(curBestLine);
-            } else {
-                visited.add(curBestLine);
-                globalBestLines = curBestLines;
-                globalBestLines.addAll(0, visited);
-            }
-
-
-            grid = grid.child(curBestLine);
-
         }
+
         return globalBestLines;
     }
+
+    private Line findBestLineForCurrentGrid(Grid grid, int depth, Supplier<Boolean> isCanceled, 
+                                            List<Line> globalBestLines, List<Line> visited) {
+        List<Line> curBestLines = new LinkedList<>();
+        Line curBestLine = null;
+
+        for (Line line : grid.possibleLines()) {
+            List<Line> rolloutLines = search(grid.child(line), depth - 1, isCanceled);
+            if (curBestLines.size() < rolloutLines.size()) {
+                curBestLine = line;
+                curBestLines = rolloutLines;
+            }
+        }
+
+        if (!curBestLines.isEmpty() && curBestLines.size() >= globalBestLines.size()) {
+            return curBestLine;
+        } else if (!globalBestLines.isEmpty() && visited.size() < globalBestLines.size()) {
+            return globalBestLines.get(visited.size());
+        }
+
+        return null;
+    }
+
+    private void updateVisitedAndGlobalBestLines(List<Line> visited, List<Line> globalBestLines, Line curBestLine) {
+        visited.add(curBestLine);
+        if (visited.size() > globalBestLines.size()) {
+            globalBestLines.clear();
+            globalBestLines.addAll(visited);
+        }
+    }
+
 }

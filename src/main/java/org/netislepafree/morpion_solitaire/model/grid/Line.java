@@ -6,21 +6,10 @@ import java.util.Collection;
 import java.util.List;
 
 public class Line implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final List<Point> points;
-
-    /**
-     * the newest point among the 5 points that made this point
-     */
     private Point newPoint;
-
-    /**
-     * line number
-     */
-    private int number;
-
-    /**
-     * grid.Direction of this line
-     */
+    private int number;   
     private Direction direction;
     public Line() {
         points = new ArrayList<>();

@@ -15,73 +15,130 @@ public class Game {
     private String playerName;
     public Grid grid;
     public boolean computerMode=false;
-    private double score=0;
+    private int score;
     private boolean isChosingLine;
     private List<Line> chooseLines;
 
     public Game() {
-        grid = new Grid(50, 50, Mode._5D);
+        grid = new Grid(30, 30, Mode._5D);
         grid.init();
     }
 
-    public void playerMove(int x, int y){
-        if (computerMode) return;
-        if (this.isChosingLine==true){
-            for (Line line : this.chooseLines){
-                for (Point point : line.getPoints()) {
-                    if (point.x == x && point.y == y) {
-                        makeMove(line);
-                        isChosingLine = false;
-                        grid.setHighlightedPoints(new ArrayList<>());
-                        return;
-                    }
-                }
-            }
-            System.out.println("Invalid Move");
+    public void playerMove(int x, int y) {
+        if (computerMode) {
             return;
         }
+
+        if (isChosingLine) {
+            if (!processLineSelection(x, y)) {
+                System.out.println("Invalid Move");
+            }
+            return;
+        }
+
         List<Line> possibleLines = grid.findLines(x, y);
-        if (possibleLines.size() == 0) {
-            System.out.println("Invalid Move");
-        } else if (possibleLines.size() == 1) {
+        int lineCount = possibleLines.size();
+
+        if (lineCount == 0) {
+            System.out.println("Impossible Move");
+        } else if (lineCount == 1) {
             makeMove(possibleLines.get(0));
-        } else if (possibleLines.size() > 1) {
-            System.out.println("More than one possible");
-            List<Point> points = new ArrayList<>();
-            for (Line line : possibleLines) {
-                List<Point> otherPoints = new ArrayList<>();
-                possibleLines.stream().filter(l -> l != line).toList()
-                        .forEach(l -> otherPoints.addAll(l.getPoints()));
-                System.out.println(otherPoints);
-                for (Point point : line.getPoints()) {
-                    if (!otherPoints.contains(point)) {
-                        points.add(point);
-                        break;
-                    }
+        } else {
+            handleMultiplePossibleLines(possibleLines);
+        }
+    }
+
+    private boolean processLineSelection(int x, int y) {
+        for (Line line : chooseLines) {
+            for (Point point : line.getPoints()) {
+                if (point.x == x && point.y == y) {
+                    makeMove(line);
+                    isChosingLine = false;
+                    grid.setHighlightedPoints(new ArrayList<>());
+                    return true;
                 }
             }
-            grid.setHighlightedPoints(points);
-            this.isChosingLine=true;
-            this.chooseLines=possibleLines;
         }
+        return false;
     }
-    public void computerMove(Algorithm algorithm) throws Exception {
-        if (!computerMode) throw new Exception();
-        Line line = algorithm.chooseMove(grid);
-        System.out.println("Got line");
+
+    private void handleMultiplePossibleLines(List<Line> possibleLines) {
+        System.out.println("Choose a point to draw the line");
+        List<Point> points = new ArrayList<>();
+        for (Line line : possibleLines) {
+            for (Point point : line.getPoints()) {
+                if (isUniquePoint(point, possibleLines)) {
+                    points.add(point);
+                    break;
+                }
+            }
+        }
+        grid.setHighlightedPoints(points);
+        isChosingLine = true;
+        chooseLines = possibleLines;
+    }
+
+    private boolean isUniquePoint(Point point, List<Line> lines) {
+        long count = lines.stream()
+                          .filter(l -> l.getPoints().contains(point))
+                          .count();
+        return count == 1;
+    }
+    
+    public void computerMove(Algorithm algorithm) {
+        if (!isComputerModeActive()) {
+            return;
+        }
+
+        Line line = getComputerMove(algorithm);
         if (line == null) {
-            throw new Exception();
+            System.out.println("No valid move found by the algorithm.");
+            return;
         }
-        makeMove(line);
+
+        executeComputerMove(line);
     }
+
+    private boolean isComputerModeActive() {
+        if (!computerMode) {
+            System.out.println("Computer mode is not active.");
+            return false;
+        }
+        return true;
+    }
+
+    private Line getComputerMove(Algorithm algorithm) {
+        try {
+            return algorithm.chooseMove(grid);
+        } catch (Exception e) {
+            System.out.println("Error during computer move: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void executeComputerMove(Line line) {
+        makeMove(line);
+        System.out.println("Computer made a move.");
+    }
+
+    
     private void makeMove(Line line) {
         grid.addLine(line);
         this.score=grid.getLines().size();
     }
 
-    public void resetMove(){
-        if (grid.getLines().size() < 1) return;
-        grid.resetLine();
+    public void resetMove() {
+        if (canResetMove()) {
+            grid.resetLine();
+        }
+    }
+
+    private boolean canResetMove() {
+        if (grid.getLines().isEmpty()) {
+            System.out.println("No moves to reset.");
+            return false;
+        }
+        return true;
     }
 
     public void setGameMode(Mode mode) {
@@ -89,49 +146,52 @@ public class Game {
     }
     
     public int getScore() {
-        return grid.getLines().size();
+        return this.score;
     }
     
-    private static Grid loadBestGrid(){
-        try {
-            FileInputStream file = new FileInputStream("best.grid");
-            ObjectInputStream in = new ObjectInputStream(file);
-
-            Grid grid = (Grid) in.readObject();
-            in.close();
-            file.close();
-            return grid;
+    private static Grid loadBestGrid() {
+        try (FileInputStream file = new FileInputStream("best.grid");
+             ObjectInputStream in = new ObjectInputStream(file)) {
+            return (Grid) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Unable to load the best grid...");
+            System.out.println("Unable to load the best grid: " + e.getMessage());
             return null;
         }
     }
+    
     private static void saveGrid(Grid grid) {
-        Grid best=loadBestGrid();
+        Grid best = loadBestGrid();
 
-        if (best == null || best.getLines().size() <= grid.getLines().size()) {
-            try {
-                System.out.println("Saving best grid...");
-                FileOutputStream file = new FileOutputStream("best.grid");
-                ObjectOutputStream out = new ObjectOutputStream(file);
+        if (shouldSaveGrid(best, grid)) {
+            try (FileOutputStream file = new FileOutputStream("best.grid");
+                 ObjectOutputStream out = new ObjectOutputStream(file)) {
                 out.writeObject(grid);
-                out.close();
-                file.close();
                 System.out.println("Grid saved!");
             } catch (IOException e) {
-                System.out.println("Error saving the best grid");
+                System.out.println("Error saving the best grid: " + e.getMessage());
             }
+        }
     }
-}
+
+    private static boolean shouldSaveGrid(Grid best, Grid current) {
+        if (best == null || best.getLines().size() <= current.getLines().size()) {
+            System.out.println("Saving best grid...");
+            return true;
+        }
+        return false;
+    }
+    
     private void saveScore() {
-            try {
-                Score.saveScore(playerName, (double) getScore());
-            } catch (IOException e){
-                System.out.println("Failed to save score");
-            }
+        try {
+            Score.saveScore(playerName, (double) getScore());
+            System.out.println("Score saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to save score: " + e.getMessage());
+        }
     }
+    
     public void gameOver() {
-        System.out.println("game over !");
+        System.out.println("Game over !");
         saveScore();
         saveGrid(this.grid);
     }
