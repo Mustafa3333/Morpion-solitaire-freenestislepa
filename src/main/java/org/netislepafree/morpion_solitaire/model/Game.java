@@ -19,7 +19,8 @@ public class Game {
     private boolean isChosingLine;
     private List<Line> chooseLines;
 
-    public Game() {
+    public Game(String playerName) {
+        this.playerName = playerName;
         grid = new Grid(30, 30, Mode._5D);
         grid.init();
     }
@@ -85,7 +86,7 @@ public class Game {
         return count == 1;
     }
     
-    public void computerMove(Algorithm algorithm) {
+    public void computerMove(Algorithm algorithm) throws Exception {
         if (!isComputerModeActive()) {
             return;
         }
@@ -93,7 +94,7 @@ public class Game {
         Line line = getComputerMove(algorithm);
         if (line == null) {
             System.out.println("No valid move found by the algorithm.");
-            return;
+            throw new Exception();
         }
 
         executeComputerMove(line);
@@ -149,7 +150,7 @@ public class Game {
         return this.score;
     }
     
-    private static Grid loadBestGrid() {
+    public static Grid loadBestGrid() {
         try (FileInputStream file = new FileInputStream("best.grid");
              ObjectInputStream in = new ObjectInputStream(file)) {
             return (Grid) in.readObject();
@@ -196,4 +197,7 @@ public class Game {
         saveGrid(this.grid);
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
 }

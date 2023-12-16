@@ -17,14 +17,18 @@
     <center>
         <ScrollPane BorderPane.alignment="CENTER">
             <content>
-                <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="1046.0" />
+                <VBox alignment="CENTER">
+                    <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="321.0" />
+                </VBox>
             </content>
         </ScrollPane>
     </center>
-    <right>
-        <VBox alignment="CENTER" spacing="50" prefWidth="130">
+    <left>
+        <VBox alignment="CENTER_LEFT" spacing="50" prefWidth="300">
+            <style>
+            </style>
             <VBox alignment="CENTER" spacing="10">
-                <Label fx:id="scoreLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Score : ">
+                <Label fx:id="Label" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Menu : ">
                     <font>
                         <Font size="26.0" />
                     </font>
@@ -40,7 +44,15 @@
             <VBox alignment="CENTER" spacing="10">
                 <ComboBox fx:id="algorithmOptions" prefHeight="26.0" prefWidth="99.0" />
                 <Button fx:id="simulateButton" mnemonicParsing="false" onAction="#simulate" prefHeight="26.0" prefWidth="64.0" text="Simulate" />
+                <Button fx:id="score" mnemonicParsing="false" onAction="#displayHistory" prefHeight="26.0" prefWidth="64.0" text="Score" />
+                <Button fx:id="best" mnemonicParsing="false" onAction="#displayBestGrid" prefHeight="26.0" prefWidth="64.0" text="Best grid" />
             </VBox>
+        </VBox>
+    </left>
+    <right>
+        <VBox prefWidth="300">
+            <style>
+            </style>
         </VBox>
     </right>
 </BorderPane>

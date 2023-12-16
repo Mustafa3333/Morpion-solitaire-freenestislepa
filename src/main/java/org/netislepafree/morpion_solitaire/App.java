@@ -48,7 +48,7 @@ public class App extends Application {
         loginButton.getStyleClass().add("button");
         loginButton.setOnAction(e -> {
             if (checkCredentials(usernameField.getText(), passwordField.getText())) {
-                startGame();
+                startGame(usernameField.getText());
             } else {
                 showAlert(Alert.AlertType.ERROR, stage, "Erreur de Connexion", "Identifiant ou mot de passe incorrect.");
             }
@@ -88,14 +88,14 @@ public class App extends Application {
         stage.show();
     }
     
-    private void startGame() {
+    private void startGame(String playerName) {
         try {
             Stage gameStage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/game.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 20, 100);
             scene.getRoot().setStyle("-fx-base:#F5F5F5");
             UserInterface controller = fxmlLoader.getController();
-            controller.start();
+            controller.start(playerName);
 
             gameStage.setTitle("Morpion solitaire");
             gameStage.setScene(scene);

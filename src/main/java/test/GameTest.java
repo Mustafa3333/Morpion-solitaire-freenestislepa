@@ -6,8 +6,6 @@ import org.netislepafree.morpion_solitaire.model.Game;
 import org.netislepafree.morpion_solitaire.model.grid.Line;
 import org.netislepafree.morpion_solitaire.model.grid.Mode;
 import java.util.List;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
@@ -16,7 +14,7 @@ public class GameTest {
 
     @BeforeEach
     public void setUp() {
-        game = new Game();
+        game = new Game("test");
         game.grid.init();
     }
     
@@ -25,7 +23,7 @@ public class GameTest {
         int x =  9;
         int y =  13;
     	List<Line> possibleLines = game.grid.findLines(x, y);
-        assertTrue("Le mouvement valide devrait produire au moins une ligne possible", !possibleLines.isEmpty());
+        assertFalse(possibleLines.isEmpty(), "Le mouvement valide devrait produire au moins une ligne possible");
     }
     
     @Test
@@ -33,7 +31,7 @@ public class GameTest {
         int x = 1;
         int y = 1;
         List<Line> possibleLines = game.grid.findLines(x, y);
-        assertTrue("Le mouvement invalide ne devrait produire aucune ligne possible", possibleLines.isEmpty());
+        assertTrue(possibleLines.isEmpty(), "Le mouvement invalide ne devrait produire aucune ligne possible");
     }  
     
     @Test
@@ -41,7 +39,7 @@ public class GameTest {
         game.playerMove(9, 13);
         game.resetMove();
         List<Line> possibleLines = game.grid.findLines(9, 13);
-        assertTrue("Le mouvement valide devrait produire au moins une ligne possible", !possibleLines.isEmpty());  
+        assertFalse(possibleLines.isEmpty(), "Le mouvement valide devrait produire au moins une ligne possible");
     }
     
     @Test
