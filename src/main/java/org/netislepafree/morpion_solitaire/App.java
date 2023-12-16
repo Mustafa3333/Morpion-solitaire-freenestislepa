@@ -98,6 +98,7 @@ public class App extends Application {
     private void startGame(String playerName) {
         try {
             Stage gameStage = new Stage();
+            gameStage.setMaximized(true);
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/game.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 20, 100);
             scene.getRoot().setStyle("-fx-base:#F5F5F5");
