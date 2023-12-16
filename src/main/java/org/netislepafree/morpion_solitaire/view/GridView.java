@@ -24,7 +24,7 @@ public class GridView {
     /**
      * The Height.
      */
-    public int height;
+    public final int height;
     private final int offX = cellSize;
     private final int offY = cellSize;
 

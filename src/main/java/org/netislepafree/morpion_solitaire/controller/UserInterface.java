@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * The type User interface.
  */
+@SuppressWarnings("rawtypes")
 public class UserInterface {
     @FXML
     private ComboBox<String> gameModeOptions;
@@ -190,8 +191,8 @@ public class UserInterface {
 
                 int row = 1;
                 for (ScoreEntry scoreEntry : history) {
-                    gridPane.add(new Label(scoreEntry.getUsername()), 0, row);
-                    gridPane.add(new Label(String.valueOf(scoreEntry.getScore())), 1, row);
+                    gridPane.add(new Label(scoreEntry.username()), 0, row);
+                    gridPane.add(new Label(String.valueOf(scoreEntry.score())), 1, row);
                     row++;
                 }
 

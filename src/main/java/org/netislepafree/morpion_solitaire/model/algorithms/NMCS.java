@@ -20,14 +20,14 @@ public class NMCS implements Algorithm {
     @Override
     public Line chooseMove(Grid grid) {
         int searchLevel = 2;
-        final long maxRunningTimeMs = 1000; 
+        final long maxRunningTimeMs = 1000;
 
-        List<Line> lines = findLinesWithinTimeLimit(grid, searchLevel, maxRunningTimeMs);
+        List<Line> lines = findLinesWithinTimeLimit(grid, searchLevel);
         return !lines.isEmpty() ? lines.get(0) : null;
     }
 
-    private List<Line> findLinesWithinTimeLimit(Grid grid, int level, long maxRunningTimeMs) {
-        long endTimeMs = System.currentTimeMillis() + maxRunningTimeMs;
+    private List<Line> findLinesWithinTimeLimit(Grid grid, int level) {
+        long endTimeMs = System.currentTimeMillis() + (long) 1000;
         return search(grid, level, () -> System.currentTimeMillis() > endTimeMs);
     }
 
@@ -50,7 +50,7 @@ public class NMCS implements Algorithm {
         return globalBestLines;
     }
 
-    private Line findBestLineForCurrentGrid(Grid grid, int depth, Supplier<Boolean> isCanceled, 
+    private Line findBestLineForCurrentGrid(Grid grid, int depth, Supplier<Boolean> isCanceled,
                                             List<Line> globalBestLines, List<Line> visited) {
         List<Line> curBestLines = new LinkedList<>();
         Line curBestLine = null;

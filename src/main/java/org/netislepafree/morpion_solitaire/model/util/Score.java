@@ -54,8 +54,8 @@ public class Score {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 int commaIndex = line.indexOf(',');
-                
-                if (commaIndex != -1) { 
+
+                if (commaIndex != -1) {
                     String name = line.substring(0, commaIndex);
                     int score = Integer.parseInt(line.substring(commaIndex + 1));
                     scoreMap.put(name, score);

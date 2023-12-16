@@ -17,7 +17,7 @@ public class UserInterfaceTest {
     /**
      * The Game.
      */
-    Game game = new Game("test");
+    final Game game = new Game("test");
 
     /**
      * Test reset move.

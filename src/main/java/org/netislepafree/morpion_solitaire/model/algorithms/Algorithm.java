@@ -13,5 +13,5 @@ public interface Algorithm  {
      * @param grid the grid
      * @return the line
      */
-    public Line chooseMove(Grid grid);
+    Line chooseMove(Grid grid);
 }

@@ -4,20 +4,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<!--suppress ALL -->
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.netislepafree.morpion_solitaire.controller.UserInterface">
     <center>
         <ScrollPane BorderPane.alignment="CENTER">
-            <content>
-                <VBox alignment="CENTER">
-                    <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="321.0" />
-                </VBox>
-            </content>
+            <VBox alignment="CENTER">
+                <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="321.0"/>
+            </VBox>
         </ScrollPane>
     </center>
     <left>
         <VBox alignment="CENTER_LEFT" spacing="50" prefWidth="300">
-            <style>
-            </style>
             <VBox alignment="CENTER" spacing="10">
                 <Label fx:id="Label" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Menu : ">
                     <font>
@@ -42,8 +39,6 @@
     </left>
     <right>
         <VBox prefWidth="300">
-            <style>
-            </style>
         </VBox>
     </right>
 </BorderPane>

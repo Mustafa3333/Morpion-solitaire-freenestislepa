@@ -4,13 +4,14 @@ package org.netislepafree.morpion_solitaire.model.util;
 /**
  * The type Score entry.
  */
-public class ScoreEntry {
+public record ScoreEntry(String username, double score) {
     /**
      * Gets username.
      *
      * @return the username
      */
-    public String getUsername() {
+    @Override
+    public String username() {
         return username;
     }
 
@@ -19,12 +20,10 @@ public class ScoreEntry {
      *
      * @return the score
      */
-    public double getScore() {
+    @Override
+    public double score() {
         return score;
     }
-
-    private final String username;
-    private final double score;
 
     /**
      * Instantiates a new Score entry.
@@ -32,8 +31,6 @@ public class ScoreEntry {
      * @param username the username
      * @param score    the score
      */
-    public ScoreEntry(String username, double score) {
-        this.score = score;
-        this.username = username;
+    public ScoreEntry {
     }
 }

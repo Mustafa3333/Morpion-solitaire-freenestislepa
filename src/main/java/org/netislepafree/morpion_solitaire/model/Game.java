@@ -19,7 +19,7 @@ public class Game {
     /**
      * The Grid.
      */
-    public Grid grid;
+    public final Grid grid;
     /**
      * The Computer mode.
      */
@@ -148,7 +148,7 @@ public class Game {
         System.out.println("Computer made a move.");
     }
 
-    
+
     private void makeMove(Line line) {
         grid.addLine(line);
         this.score=grid.getLines().size();
@@ -203,7 +203,7 @@ public class Game {
             return null;
         }
     }
-    
+
     private static void saveGrid(Grid grid) {
         Grid best = loadBestGrid();
 
@@ -225,7 +225,7 @@ public class Game {
         }
         return false;
     }
-    
+
     private void saveScore() {
         try {
             Score.saveScore(playerName, (double) getScore());

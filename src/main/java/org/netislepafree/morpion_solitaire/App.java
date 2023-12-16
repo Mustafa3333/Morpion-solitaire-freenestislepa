@@ -27,6 +27,7 @@ import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -64,7 +65,7 @@ public class App extends Application {
         Button signupButton = new Button("Inscription");
         signupButton.getStyleClass().addAll("button", "red");
         signupButton.setOnAction(e -> showSignupWindow());
-        
+
      // HBox pour les boutons de connexion et d'inscription
         HBox buttonBox = new HBox(10); // 10 est l'espacement entre les boutons
         buttonBox.setAlignment(Pos.CENTER);
@@ -86,14 +87,14 @@ public class App extends Application {
 
         // Créer la scène avec le thème sombre
         Scene scene = new Scene(root, 300, 250);
-        scene.getStylesheets().add(getClass().getResource("/dark-theme.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/dark-theme.css")).toExternalForm());
 
         // Configurer et afficher le stage
         stage.setTitle("Connexion - Morpion solitaire");
         stage.setScene(scene);
         stage.show();
     }
-    
+
     private void startGame(String playerName) {
         try {
             Stage gameStage = new Stage();
@@ -112,7 +113,7 @@ public class App extends Application {
         }
     }
 
-    
+
     private void showSignupWindow() {
         Stage signupStage = new Stage();
         VBox signupRoot = new VBox(10);
@@ -134,14 +135,14 @@ public class App extends Application {
         signupRoot.getChildren().addAll(newUsernameField, newPasswordField, signupConfirmButton);
 
         Scene signupScene = new Scene(signupRoot, 300, 250);
-        signupScene.getStylesheets().add(getClass().getResource("/dark-theme.css").toExternalForm());
+        signupScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/dark-theme.css")).toExternalForm());
 
         signupStage.setScene(signupScene);
         signupStage.setTitle("Inscription");
         signupStage.show();
     }
 
-    
+
     private void registerUser(String username, String password, Stage signupStage) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -179,7 +180,7 @@ public class App extends Application {
     }
 
 
-    
+
     private String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (byte b : hash) {

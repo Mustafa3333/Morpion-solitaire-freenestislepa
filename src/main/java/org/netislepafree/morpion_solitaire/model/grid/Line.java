@@ -14,7 +14,7 @@ public class Line implements Serializable {
     private static final long serialVersionUID = 1L;
     private final List<Point> points;
     private Point newPoint;
-    private int number;   
+    private int number;
     private Direction direction;
 
     /**
