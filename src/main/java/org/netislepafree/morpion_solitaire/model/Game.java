@@ -11,20 +11,40 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Game.
+ */
 public class Game {
-    private String playerName;
+    private final String playerName;
+    /**
+     * The Grid.
+     */
     public Grid grid;
+    /**
+     * The Computer mode.
+     */
     public boolean computerMode=false;
     private int score;
     private boolean isChosingLine;
     private List<Line> chooseLines;
 
+    /**
+     * Instantiates a new Game.
+     *
+     * @param playerName the player name
+     */
     public Game(String playerName) {
         this.playerName = playerName;
         grid = new Grid(30, 30, Mode._5D);
         grid.init();
     }
 
+    /**
+     * Player move.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void playerMove(int x, int y) {
         if (computerMode) {
             return;
@@ -85,7 +105,13 @@ public class Game {
                           .count();
         return count == 1;
     }
-    
+
+    /**
+     * Computer move.
+     *
+     * @param algorithm the algorithm
+     * @throws Exception the exception
+     */
     public void computerMove(Algorithm algorithm) throws Exception {
         if (!isComputerModeActive()) {
             return;
@@ -128,6 +154,9 @@ public class Game {
         this.score=grid.getLines().size();
     }
 
+    /**
+     * Reset move.
+     */
     public void resetMove() {
         if (canResetMove()) {
             grid.resetLine();
@@ -142,14 +171,29 @@ public class Game {
         return true;
     }
 
+    /**
+     * Sets game mode.
+     *
+     * @param mode the mode
+     */
     public void setGameMode(Mode mode) {
         this.grid.setMode(mode);
     }
-    
+
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public int getScore() {
         return this.score;
     }
-    
+
+    /**
+     * Load best grid grid.
+     *
+     * @return the grid
+     */
     public static Grid loadBestGrid() {
         try (FileInputStream file = new FileInputStream("best.grid");
              ObjectInputStream in = new ObjectInputStream(file)) {
@@ -190,13 +234,21 @@ public class Game {
             System.out.println("Failed to save score: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * Game over.
+     */
     public void gameOver() {
         System.out.println("Game over !");
         saveScore();
         saveGrid(this.grid);
     }
 
+    /**
+     * Gets player name.
+     *
+     * @return the player name
+     */
     public String getPlayerName() {
         return playerName;
     }

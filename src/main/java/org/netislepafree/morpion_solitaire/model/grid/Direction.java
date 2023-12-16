@@ -1,5 +1,23 @@
 package org.netislepafree.morpion_solitaire.model.grid;
 
+/**
+ * The enum Direction.
+ */
 public enum Direction {
-    HORIZONTAL, VERTICAL, FALL, RISE
+    /**
+     * Horizontal direction.
+     */
+    HORIZONTAL,
+    /**
+     * Vertical direction.
+     */
+    VERTICAL,
+    /**
+     * Fall direction.
+     */
+    FALL,
+    /**
+     * Rise direction.
+     */
+    RISE
 }

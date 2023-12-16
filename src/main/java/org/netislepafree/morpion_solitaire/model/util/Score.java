@@ -6,9 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Score.
+ */
 public class Score {
     private static final String scorePath = "history.csv";
 
+    /**
+     * Load scores list.
+     *
+     * @return the list
+     * @throws IOException the io exception
+     */
     public static List<ScoreEntry> loadScores() throws IOException {
         File file = new File(scorePath);
         List<ScoreEntry> scoresList;
@@ -27,7 +36,13 @@ public class Score {
         }
         return scoresList;
     }
-    
+
+    /**
+     * Gets scores.
+     *
+     * @return the scores
+     * @throws IOException the io exception
+     */
     public static Map<String, Integer> getScores() throws IOException {
         File file = new File(scorePath);
         Map<String, Integer> scoreMap = new HashMap<>();
@@ -48,14 +63,19 @@ public class Score {
                     System.err.println("Ligne invalide ignorée : " + line);
                 }
             }
-        } catch (IOException e) {
-            throw e;
         }
 
         return scoreMap;
     }
 
 
+    /**
+     * Save score.
+     *
+     * @param name  the name
+     * @param score the score
+     * @throws IOException the io exception
+     */
     public static void saveScore(String name, Double score) throws IOException {
         try (BufferedWriter out = new BufferedWriter(
                 new FileWriter(scorePath, true))) {

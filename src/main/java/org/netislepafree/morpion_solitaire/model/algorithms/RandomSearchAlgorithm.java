@@ -6,6 +6,9 @@ import org.netislepafree.morpion_solitaire.model.grid.Line;
 
 import java.util.List;
 
+/**
+ * The type Random search algorithm.
+ */
 public class RandomSearchAlgorithm implements Algorithm {
     @Override
     public Line chooseMove(Grid grid) {

@@ -9,15 +9,32 @@ import org.netislepafree.morpion_solitaire.model.grid.Point;
 
 import java.util.List;
 
+/**
+ * The type Grid view.
+ */
 public class GridView {
-    private Grid grid;
-    private Canvas canvas;
-    private GraphicsContext g;
+    private final Grid grid;
+    private final Canvas canvas;
+    private final GraphicsContext g;
     private int cellSize;
+    /**
+     * The Width.
+     */
     public int width;
+    /**
+     * The Height.
+     */
     public int height;
     private final int offX = cellSize;
     private final int offY = cellSize;
+
+    /**
+     * Instantiates a new Grid view.
+     *
+     * @param grid     the grid
+     * @param canvas   the canvas
+     * @param cellSize the cell size
+     */
     public GridView(Grid grid, Canvas canvas, int cellSize) {
         this.grid=grid;
         this.canvas = canvas;
@@ -30,6 +47,9 @@ public class GridView {
         canvas.setFocusTraversable(true);
     }
 
+    /**
+     * Init.
+     */
     public void init() {
         clearCanvas();
         drawGridRectangle();
@@ -69,6 +89,9 @@ public class GridView {
         }
     }
 
+    /**
+     * Update view.
+     */
     public void updateView() {
         drawPoints();
         drawNumberedPoints();
@@ -98,12 +121,16 @@ public class GridView {
     private void highlightPoints(List<Point> points){
         if (points.size()>0) {
             g.setFill(Color.valueOf("#0F7129"));
-            points.forEach(point -> {
-                drawPoint(point, 5);
-            });
+            points.forEach(point -> drawPoint(point, 5));
         }
     }
 
+    /**
+     * Draw point.
+     *
+     * @param point  the point
+     * @param radius the radius
+     */
     public void drawPoint(Point point, int radius) {
         double centerX = calculateCoordinate(point.x, offX, cellSize);
         double centerY = calculateCoordinate(point.y, offY, cellSize);
@@ -152,15 +179,30 @@ public class GridView {
         double numY = centerY + radius * 1.3;
         g.strokeText(numberStr, numX, numY);
     }
-    
+
+    /**
+     * Gets cell size.
+     *
+     * @return the cell size
+     */
     public int getCellSize() {
         return cellSize;
     }
 
+    /**
+     * Gets off x.
+     *
+     * @return the off x
+     */
     public int getOffX() {
         return offX;
     }
 
+    /**
+     * Gets off y.
+     *
+     * @return the off y
+     */
     public int getOffY() {
         return offY;
     }

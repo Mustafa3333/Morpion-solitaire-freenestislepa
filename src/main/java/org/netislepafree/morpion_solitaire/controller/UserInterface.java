@@ -3,36 +3,47 @@ package org.netislepafree.morpion_solitaire.controller;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
+import org.netislepafree.morpion_solitaire.model.Game;
 import org.netislepafree.morpion_solitaire.model.algorithms.Algorithm;
 import org.netislepafree.morpion_solitaire.model.algorithms.NMCS;
 import org.netislepafree.morpion_solitaire.model.algorithms.RandomSearchAlgorithm;
 import org.netislepafree.morpion_solitaire.model.grid.Grid;
 import org.netislepafree.morpion_solitaire.model.grid.Mode;
-import javafx.scene.input.MouseEvent;
-import org.netislepafree.morpion_solitaire.model.Game;
 import org.netislepafree.morpion_solitaire.model.util.Score;
 import org.netislepafree.morpion_solitaire.model.util.ScoreEntry;
 import org.netislepafree.morpion_solitaire.view.GridView;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The type User interface.
+ */
 public class UserInterface {
     @FXML
     private ComboBox<String> gameModeOptions;
+    /**
+     * The Canvas.
+     */
     @FXML
     public Canvas canvas;
     @FXML
     private ComboBox<String> algorithmOptions;
     private Game game;
     private GridView gridView;
-    
+
+    /**
+     * Start.
+     *
+     * @param playerName the player name
+     */
     public void start(String playerName){
         gameModeOptions.getItems().removeAll(gameModeOptions.getItems());
         gameModeOptions.getItems().addAll("5T", "5D");
@@ -44,7 +55,12 @@ public class UserInterface {
         this.gridView= new GridView(game.grid, canvas,25);
         gridView.init();
     }
-    
+
+    /**
+     * Mouse pressed.
+     *
+     * @param me the mouseevent
+     */
     public void mousePressed(MouseEvent me) {
         logMousePosition(me);
         if (isInvalidClick(me)) {
@@ -78,7 +94,10 @@ public class UserInterface {
         return new Point(gridX, gridY);
     }
 
-    
+
+    /**
+     * Game mode changed.
+     */
     public void gameModeChanged() {
         Mode mode = determineSelectedGameMode();
         resetGameWithNewMode(mode);
@@ -93,7 +112,10 @@ public class UserInterface {
         reset();
         game.setGameMode(mode);
     }
-    
+
+    /**
+     * Reset.
+     */
     public void reset() {
         recreateGame(game.getPlayerName());
         updateGameMode();
@@ -111,20 +133,19 @@ public class UserInterface {
         game.setGameMode(mode);
     }
 
-    
-    public void simulate() throws Exception {
+
+    /**
+     * Simulate.
+     *
+     */
+    public void simulate() {
         this.game.computerMode=true;
         String algorithmName = algorithmOptions.getSelectionModel().getSelectedItem().trim();
         Algorithm algo = switch (algorithmName) {
-                                case "Random" -> {
-                                    yield new RandomSearchAlgorithm();
-                                }
-                                case "NMCS" -> {
-                                    yield new NMCS();
-                                }
-                                default -> {
-                                    yield null;
-                                }};
+                                case "Random" -> new RandomSearchAlgorithm();
+                                case "NMCS" -> new NMCS();
+                                default -> null;
+        };
         Thread simulationThread = new Thread(() -> {
             while (true) {
                 try {
@@ -140,7 +161,10 @@ public class UserInterface {
         simulationThread.interrupt();
 
     }
-    
+
+    /**
+     * Undo.
+     */
     public void undo(){
         this.game.resetMove();
         gridView.init();
@@ -187,19 +211,19 @@ public class UserInterface {
     @FXML
     private void displayBestGrid() {
         System.out.println("Best Grid");
-        Grid bestGrid = game.loadBestGrid();
 
+        Grid bestGrid = Game.loadBestGrid();
         if (bestGrid == null) {
             System.out.println("Failed to load the best grid!");
             return;
         }
+
         Dialog dialog = new Dialog();
         Canvas canvas = new Canvas();
-        GridView gv = new GridView(bestGrid, canvas, 30);
-        BorderPane bp = new BorderPane();
-        bp.setCenter(canvas);
-        dialog.getDialogPane().setContent(bp);
+        GridView gv = new GridView(bestGrid, canvas, 25);
         gv.init();
-        dialog.show();
+        dialog.getDialogPane().setContent(canvas);
+        dialog.getDialogPane().getButtonTypes().add(new ButtonType("ok",ButtonBar.ButtonData.OK_DONE ));
+        dialog.showAndWait();
     }
 }

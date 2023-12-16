@@ -2,42 +2,82 @@ package org.netislepafree.morpion_solitaire.model.grid;
 
 import org.netislepafree.morpion_solitaire.model.algorithms.RandomSearchAlgorithm;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
+/**
+ * The type Grid.
+ */
 public class Grid implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
-    private final Point[][] grid;
+    /**
+     * The Grid.
+     */
+    public final Point[][] grid;
     private Set<Point> points;
     private List<Point> highlightedPoints=new ArrayList<>();
 
+    /**
+     * Gets highlighted points.
+     *
+     * @return the highlighted points
+     */
     public List<Point> getHighlightedPoints() {
         return highlightedPoints;
     }
 
+    /**
+     * Sets highlighted points.
+     *
+     * @param highlightedPoints the highlighted points
+     */
     public void setHighlightedPoints(List<Point> highlightedPoints) {
         this.highlightedPoints = highlightedPoints;
     }
 
+    /**
+     * Gets points.
+     *
+     * @return the points
+     */
     public Set<Point> getPoints() {
         return Collections.unmodifiableSet(points);
     }
     private List<Line> lines;
     private Mode mode;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
+    /**
+     * Gets width.
+     *
+     * @return the width
+     */
     public int getWidth() {
         return grid.length;
     }
 
+    /**
+     * Gets height.
+     *
+     * @return the height
+     */
     public int getHeight() {
         return grid[0].length;
     }
 
+    /**
+     * Instantiates a new Grid.
+     *
+     * @param width  the width
+     * @param height the height
+     * @param mode   the mode
+     */
     public Grid(int width, int height, Mode mode) {
         this.width=width;
         this.height=height;
@@ -46,7 +86,13 @@ public class Grid implements Serializable {
         this.lines = new ArrayList<>();
         this.mode = mode;
     }
-    
+
+    /**
+     * Add point.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void addPoint(int x, int y) {
         Point newPoint = grid[x][y];
         if (newPoint == null) {
@@ -55,7 +101,12 @@ public class Grid implements Serializable {
             points.add(newPoint);
         }
     }
-    
+
+    /**
+     * Add line.
+     *
+     * @param line the line
+     */
     public void addLine(Line line) {
         line.setNumber(lines.size() + 1);
 
@@ -72,6 +123,9 @@ public class Grid implements Serializable {
         lines.add(line);
     }
 
+    /**
+     * Init.
+     */
     public void init() {
         int startX = (width - 10) / 2;
         int startY = (height - 10) / 2;
@@ -92,6 +146,13 @@ public class Grid implements Serializable {
     }
 
 
+    /**
+     * Find lines list.
+     *
+     * @param x the x
+     * @param y the y
+     * @return the list
+     */
     public List<Line> findLines(int x, int y) {
         if (!isPointValidForLine(x, y)) {
             return Collections.emptyList();
@@ -106,10 +167,23 @@ public class Grid implements Serializable {
         return isValidX(x) && isValidY(y) && grid[x][y] == null;
     }
 
+    /**
+     * Gets mode.
+     *
+     * @return the mode
+     */
     public Mode getMode() {
 		return this.mode;
 	}
 
+    /**
+     * Find lines list.
+     *
+     * @param x         the x
+     * @param y         the y
+     * @param direction the direction
+     * @return the list
+     */
     public List<Line> findLines(int x, int y, Direction direction) {
         if (grid[x][y] != null) {
             return Collections.emptyList();
@@ -166,6 +240,9 @@ public class Grid implements Serializable {
         return possibleLines;
     }
 
+    /**
+     * Reset line.
+     */
     public void resetLine() {
         if (lines.isEmpty()) {
             return;
@@ -190,22 +267,49 @@ public class Grid implements Serializable {
         }
     }
 
+    /**
+     * Is valid x boolean.
+     *
+     * @param x the x
+     * @return the boolean
+     */
     public boolean isValidX(int x) {
         return x >= 0 && x < width;
     }
 
+    /**
+     * Is valid y boolean.
+     *
+     * @param y the y
+     * @return the boolean
+     */
     public boolean isValidY(int y) {
         return y >= 0 && y < height;
     }
 
+    /**
+     * Sets mode.
+     *
+     * @param mode the mode
+     */
     public void setMode(Mode mode) {
         this.mode = mode;
     }
 
+    /**
+     * Gets lines.
+     *
+     * @return the lines
+     */
     public List<Line> getLines() {
         return lines;
     }
 
+    /**
+     * Possible lines list.
+     *
+     * @return the list
+     */
     public List<Line> possibleLines() {
         HashSet<Point> pointsSoFar = new HashSet<>();
         List<Line> possibleLines = new ArrayList<>();
@@ -223,6 +327,12 @@ public class Grid implements Serializable {
     }
 
 
+    /**
+     * Gets neighbors.
+     *
+     * @param point the point
+     * @return the neighbors
+     */
     public Collection<Point> getNeighbors(Point point) {
         return IntStream.rangeClosed(-1, 1)
                         .boxed()
@@ -234,6 +344,11 @@ public class Grid implements Serializable {
     }
 
 
+    /**
+     * Copy grid.
+     *
+     * @return the grid
+     */
     public Grid copy() {
         Grid copy = new Grid(getWidth(), getHeight(), mode);
 
@@ -250,12 +365,23 @@ public class Grid implements Serializable {
         return copy;
     }
 
+    /**
+     * Child grid.
+     *
+     * @param line the line
+     * @return the grid
+     */
     public Grid child(Line line) {
         Grid newGrid = copy();
         newGrid.addLine(line);
         return newGrid;
     }
 
+    /**
+     * Rollout list.
+     *
+     * @return the list
+     */
     public List<Line> rollout() {
         Grid copy = copy();
         List<Line> list = new ArrayList<>();

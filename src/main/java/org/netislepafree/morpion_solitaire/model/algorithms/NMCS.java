@@ -3,10 +3,20 @@ package org.netislepafree.morpion_solitaire.model.algorithms;
 import org.netislepafree.morpion_solitaire.model.grid.Grid;
 import org.netislepafree.morpion_solitaire.model.grid.Line;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * The type Nmcs.
+ */
 public class NMCS implements Algorithm {
+    /**
+     * Choose move line.
+     *
+     * @param grid the grid
+     * @return the line
+     */
     @Override
     public Line chooseMove(Grid grid) {
         int searchLevel = 2;

@@ -1,31 +1,37 @@
 package org.netislepafree.morpion_solitaire;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import javafx.animation.PauseTransition;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.netislepafree.morpion_solitaire.controller.UserInterface;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
+
+/**
+ * The type App.
+ */
 public class App extends Application {
     @Override
     public void start(Stage stage) {
@@ -176,17 +182,24 @@ public class App extends Application {
     
     private String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
                 hexString.append('0');
             }
             hexString.append(hex);
         }
         return hexString.toString();
     }
-    
-    private boolean checkCredentials(String username, String password) {
+
+    /**
+     * Check credentials boolean.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the boolean
+     */
+    public boolean checkCredentials(String username, String password) {
         try {
             Path filePath = Paths.get("src/main/resources/users.txt");
             List<String> lines = Files.readAllLines(filePath);
@@ -214,7 +227,12 @@ public class App extends Application {
         }
     }
 
-    
+
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
