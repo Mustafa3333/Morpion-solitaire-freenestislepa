@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<!--suppress ALL -->
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.netislepafree.morpion_solitaire.controller.UserInterface">
+    <center>
+        <ScrollPane BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER">
+                <Canvas fx:id="canvas" height="321.0" onMousePressed="#mousePressed" width="321.0"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+    <left>
+        <VBox alignment="CENTER_LEFT" spacing="50" prefWidth="300">
+            <VBox alignment="CENTER" spacing="10">
+                <Label fx:id="Label" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="210.0" text="Menu : ">
+                    <font>
+                        <Font size="26.0" />
+                    </font>
+                </Label>
+                <ComboBox fx:id="gameModeOptions" onAction="#gameModeChanged" prefHeight="26.0" prefWidth="61.0" />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="graphButton" mnemonicParsing="false" onAction="#reset" text="Reset" />
+                <Button fx:id="undoButton" mnemonicParsing="false" onAction="#undo" text="Undo" />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="algorithmOptions" prefHeight="26.0" prefWidth="99.0" />
+                <Button fx:id="simulateButton" mnemonicParsing="false" onAction="#simulate" prefHeight="26.0" prefWidth="64.0" text="Simulate" />
+                <Button fx:id="score" mnemonicParsing="false" onAction="#displayHistory" prefHeight="26.0" prefWidth="64.0" text="Score" />
+                <Button fx:id="best" mnemonicParsing="false" onAction="#displayBestGrid" prefHeight="26.0" prefWidth="64.0" text="Best grid" />
+            </VBox>
+        </VBox>
+    </left>
+    <right>
+        <VBox prefWidth="300">
+        </VBox>
+    </right>
+</BorderPane>

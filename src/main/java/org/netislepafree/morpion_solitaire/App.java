@@ -87,7 +87,7 @@ public class App extends Application {
 
         // Créer la scène avec le thème sombre
         Scene scene = new Scene(root, 300, 250);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/dark-theme.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/darkTheme.css")).toExternalForm());
 
         // Configurer et afficher le stage
         stage.setTitle("Connexion - Morpion solitaire");
